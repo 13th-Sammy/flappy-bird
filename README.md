@@ -21,3 +21,13 @@ we close the window.
 
 Event based code will be inside pollevent loop, as everytime there is a new event it is fed <br>
 to the object event. Other code like graphics rendering will be outside the pollevent loop.
+
+Before window open, load bird texture in object of Texture class. <br>
+Then create an object of sprite class, set its texture to birdTexture and give it a screen position. <br>
+Inside window-open, outside pollevent - window.draw(bird). All draw() must be between <br>
+clear() and display() for smooth display every frame.
+
+We create a downwards bird velocity variable and every frame add it to y coordinate of <br>
+bird position using bird.setposition(bird.getposition().x, bird.getposition().y + birdvelocity).
+
+Inside pollevent loop, if space is pressed, bird position goes up by 150 pixels. 
