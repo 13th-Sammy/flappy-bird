@@ -26,10 +26,7 @@ int main()
             else if(event.type == Event::KeyPressed)
             {
                 if(event.key.code == Keyboard::Space)
-                {
                     bird.setPosition(bird.getPosition().x, bird.getPosition().y - 150);
-                    //birdVelocity = -5;
-                }
             }
         } 
         //Non event based code outside, event based code inside pollevent(event)==true loop
