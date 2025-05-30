@@ -31,3 +31,5 @@ We create a downwards bird velocity variable and every frame add it to y coordin
 bird position using bird.setposition(bird.getposition().x, bird.getposition().y + birdvelocity).
 
 Inside pollevent loop, if space is pressed, bird position goes up by 150 pixels. 
+
+Added background by just creating a sprite and window.draw(background).
