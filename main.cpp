@@ -12,14 +12,14 @@ int main()
     while (window.isOpen() == true)
     {
         //add game logic here
-        Event event; //captures all events while window is open
+        Event event; //stores events like key-presses
         while(window.pollEvent(event) == true) //enters loop if there are new events, updates event object
         {
             if(event.type == Event::Closed)
-                window.close();
-        } //if closed signal, close window, loop won't repeat
-        //Rest of game logic below
-
+                window.close(); //if closed signal, close window, loop won't repeat
+        } 
+        //Non event based code outside, event based code inside pollevent(event)==true loop
+        
     }
     return 0;
 }
