@@ -11,6 +11,8 @@ int main()
     Texture birdTexture, backgroundTexture, pipeTexture;
     float birdVelocity = 0.25; 
     bool gameover = false;
+    int score = 0;
+    bool scored1 = false, scored2 = false; // Track if we've scored from each pipe pair
 
     // Random number generator for pipe gaps
     std::random_device rd;
@@ -80,6 +82,10 @@ int main()
                         tpipe2.setPosition(2600, gap2 - GAP_SIZE/2);
                         bpipe1.setPosition(1600, gap1 + GAP_SIZE/2);
                         bpipe2.setPosition(2600, gap2 + GAP_SIZE/2);
+                        // Reset Score 
+                        score = 0;
+                        scored1 = false;
+                        scored2 = false;
                         // Change flag so it enters motion block again
                         gameover = false;
                     }    
@@ -102,6 +108,19 @@ int main()
             // Bird Gravity -
             bird.setPosition(bird.getPosition().x, bird.getPosition().y + birdVelocity); // position of bird goes down every frame
 
+            // Check if bird passed pipe1 and hasn't scored yet
+            if(!scored1 && bird.getPosition().x > tpipe1.getPosition().x + tpipe1.getGlobalBounds().width)
+            {
+                score++;
+                scored1 = true;
+            }
+            // Check if bird passed pipe2 and hasn't scored yet
+            if(!scored2 && bird.getPosition().x > tpipe2.getPosition().x + tpipe2.getGlobalBounds().width)
+            {
+                score++;
+                scored2 = true;
+            }
+            
             //To draw pipes
             tpipe1.move(-0.5,0);
             tpipe2.move(-0.5,0);
@@ -113,6 +132,7 @@ int main()
                 float newGap = gapDist(gen);
                 tpipe1.setPosition(rightmostX + 600, newGap - GAP_SIZE/2);
                 bpipe1.setPosition(rightmostX + 600, newGap + GAP_SIZE/2);
+                scored1 = false;
             }
             if(tpipe2.getPosition().x <= -tpipe2.getGlobalBounds().width)
             {
@@ -120,6 +140,7 @@ int main()
                 float newGap = gapDist(gen);
                 tpipe2.setPosition(rightmostX + 600, newGap - GAP_SIZE/2);
                 bpipe2.setPosition(rightmostX + 600, newGap + GAP_SIZE/2);
+                scored2 = false;
             }
 
             // If bird falls down or goes way up, further movement stops
@@ -144,6 +165,14 @@ int main()
         window.draw(bpipe2);
         window.draw(bird);
         window.display(); // This swaps front and back buffers for continuity
+
+        // Show score on console
+        static int lastScore = -1;
+        if (score != lastScore) 
+        {
+        cout << "Score: " << score << endl;
+        lastScore = score;
+        }
     }
     return 0;
 }
