@@ -8,17 +8,21 @@ using std::endl;
 int main()
 {
     Texture birdTexture, backgroundTexture, pipeTexture;
-    float birdVelocity = 0.25; //downwards bird velocity
+    float birdVelocity = 0.25; 
+    bool gameover = false;
 
-    birdTexture.loadFromFile("assets/bird.png");  //load bird texture
+    // Load Bird
+    birdTexture.loadFromFile("assets/bird.png"); 
     Sprite bird;
     bird.setTexture(birdTexture);
-    bird.setPosition(700, 450); //set bird texture and initial position to sprite
+    bird.setPosition(700, 450); 
 
-    backgroundTexture.loadFromFile("assets/background.png"); //load background texture
+    // Load Background
+    backgroundTexture.loadFromFile("assets/background.png"); 
     Sprite background;
-    background.setTexture(backgroundTexture); //set background texture to sprite
+    background.setTexture(backgroundTexture); 
 
+    // Load pipes
     pipeTexture.loadFromFile("assets/pipeb.png");
     Sprite tpipe1, tpipe2, bpipe1, bpipe2;
     //toppipe1
@@ -36,17 +40,34 @@ int main()
     bpipe2.setTexture(pipeTexture);
     bpipe2.setPosition(2600, 900 - bpipe2.getGlobalBounds().height);
 
-    RenderWindow window(VideoMode(1600, 900), "Flappy Bird"); //Create a Game Window
+    //Create a Game Window
+    RenderWindow window(VideoMode(1600, 900), "Flappy Bird"); 
 
+    // Game Logic inside this while loop
     while (window.isOpen() == true)
     {
-        //add game logic here
-
-        Event event; //stores events like key-presses
-        while(window.pollEvent(event) == true) //enters loop if there are new events, updates event object
+        // Event Handler Loop
+        Event event;
+        while(window.pollEvent(event) == true) 
         {
+            // Checks for Close Signal
             if(event.type == Event::Closed)
-                window.close(); //if closed signal, close window, loop won't repeat
+                window.close(); 
+
+            // Checks for Game Over and Restarts Game
+            if (gameover == true)
+            {   
+                if(event.type == Event::KeyPressed)
+                {
+                    if(event.key.code == Keyboard::Space)
+                    {
+                        bird.setPosition(bird.getPosition().x, bird.getPosition().y - 125);
+                        gameover = false;
+                    }    
+                }
+            }
+            
+            // Checks for Space press
             else if(event.type == Event::KeyPressed)
             {
                 if(event.key.code == Keyboard::Space)
@@ -54,46 +75,56 @@ int main()
             }
         } 
 
-        //Non event based code outside, event based code inside pollevent(event)==true loop
+        // Non Event based code under -
 
-        bird.setPosition(bird.getPosition().x, bird.getPosition().y + birdVelocity); // position of bird goes down every frame
+        // If gameover == false, all movement code inside -
+        if(gameover == false)
+        {
+            // Bird Gravity -
+            bird.setPosition(bird.getPosition().x, bird.getPosition().y + birdVelocity); // position of bird goes down every frame
 
-        //To draw pipes
-        tpipe1.move(-0.5,0);
-        tpipe2.move(-0.5,0);
-        bpipe1.move(-0.5,0);
-        bpipe2.move(-0.5,0);
-        if(tpipe1.getPosition().x <= -tpipe1.getGlobalBounds().width)
-        {
-            float rightmostX = std::max(tpipe2.getPosition().x, 1600.0f); // Find rightmost pipe position
-            tpipe1.setPosition(rightmostX + 600, tpipe1.getPosition().y);
-        }
-        if(tpipe2.getPosition().x <= -tpipe2.getGlobalBounds().width)
-        {
-            float rightmostX = std::max(tpipe1.getPosition().x, 1600.0f);
-            tpipe2.setPosition(rightmostX + 600, tpipe2.getPosition().y);
-        }
-        // Same logic for bottom pipes
-        if(bpipe1.getPosition().x <= -bpipe1.getGlobalBounds().width)
-        {
-            float rightmostX = std::max(bpipe2.getPosition().x, 1600.0f);
-            bpipe1.setPosition(rightmostX + 600, bpipe1.getPosition().y);
-        }   
-        if(bpipe2.getPosition().x <= -bpipe2.getGlobalBounds().width)
-        {
-            float rightmostX = std::max(bpipe1.getPosition().x, 1600.0f);
-            bpipe2.setPosition(rightmostX + 600, bpipe2.getPosition().y);
+            //To draw pipes
+            tpipe1.move(-0.5,0);
+            tpipe2.move(-0.5,0);
+            bpipe1.move(-0.5,0);
+            bpipe2.move(-0.5,0);
+            if(tpipe1.getPosition().x <= -tpipe1.getGlobalBounds().width)
+            {
+                float rightmostX = std::max(tpipe2.getPosition().x, 1600.0f); // Find rightmost pipe position
+                tpipe1.setPosition(rightmostX + 600, tpipe1.getPosition().y);
+            }
+            if(tpipe2.getPosition().x <= -tpipe2.getGlobalBounds().width)
+            {
+                float rightmostX = std::max(tpipe1.getPosition().x, 1600.0f);
+                tpipe2.setPosition(rightmostX + 600, tpipe2.getPosition().y);
+            }
+            // Same logic for bottom pipes
+            if(bpipe1.getPosition().x <= -bpipe1.getGlobalBounds().width)
+            {
+                float rightmostX = std::max(bpipe2.getPosition().x, 1600.0f);
+                bpipe1.setPosition(rightmostX + 600, bpipe1.getPosition().y);
+            }   
+            if(bpipe2.getPosition().x <= -bpipe2.getGlobalBounds().width)
+            {
+                float rightmostX = std::max(bpipe1.getPosition().x, 1600.0f);
+                bpipe2.setPosition(rightmostX + 600, bpipe2.getPosition().y);
+            }
+
+            // If bird falls down, further movement stops
+            if (bird.getPosition().y > 900) 
+                gameover = true;
         }
         
-        //DRAW EVERYTHING ON SCREEN, CONTINUOUSLY -
-        window.clear(); //clear window every frame
+        // Draw everything on Screen continuously -
+        window.clear(); // This clears screen every frame
+        // All Draw must be between clear() and display()
         window.draw(background);
         window.draw(tpipe1);
         window.draw(tpipe2);
         window.draw(bpipe1);
         window.draw(bpipe2);
-        window.draw(bird); //draw bird, all drawing must be between window.clear and display
-        window.display(); // swap front and back buffers, continuity between frames thing
+        window.draw(bird);
+        window.display(); // This swaps front and back buffers for continuity
     }
     return 0;
 }
