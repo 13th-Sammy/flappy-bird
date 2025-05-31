@@ -39,3 +39,6 @@ Added 2 pipes, 4 sprites of top and bottom and properly set their positions for 
 
 Added gameover if bird falls down. All movement code is inside if gameover==false. <br>
 From here, it's about adding collision detection and fine tuning.
+
+Proper GameOver - store initial position, if space pressed, reset bird to initial position and
+set pipes to initial position.

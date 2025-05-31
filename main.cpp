@@ -15,7 +15,7 @@ int main()
     birdTexture.loadFromFile("assets/bird.png"); 
     Sprite bird;
     bird.setTexture(birdTexture);
-    bird.setPosition(700, 450); 
+    bird.setPosition(700, 450);
 
     // Load Background
     backgroundTexture.loadFromFile("assets/background.png"); 
@@ -61,7 +61,14 @@ int main()
                 {
                     if(event.key.code == Keyboard::Space)
                     {
-                        bird.setPosition(bird.getPosition().x, bird.getPosition().y - 125);
+                        // Set bird to initial position
+                        bird.setPosition(700, 450);
+                        // Set pipes to initial position
+                        tpipe1.setPosition(1600, tpipe1.getGlobalBounds().height);
+                        tpipe2.setPosition(2600, tpipe2.getGlobalBounds().height);
+                        bpipe1.setPosition(1600, 900 - bpipe1.getGlobalBounds().height);
+                        bpipe2.setPosition(2600, 900 - bpipe2.getGlobalBounds().height);
+                        // Change flag so it enters motion block again
                         gameover = false;
                     }    
                 }
