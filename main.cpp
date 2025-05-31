@@ -113,6 +113,13 @@ int main()
             // If bird falls down, further movement stops
             if (bird.getPosition().y > 900) 
                 gameover = true;
+
+            // Collision detection
+            if(bird.getGlobalBounds().intersects(tpipe1.getGlobalBounds()) ||
+            bird.getGlobalBounds().intersects(tpipe2.getGlobalBounds()) ||
+            bird.getGlobalBounds().intersects(bpipe1.getGlobalBounds()) ||
+            bird.getGlobalBounds().intersects(bpipe2.getGlobalBounds()))
+                gameover = true;
         }
         
         // Draw everything on Screen continuously -
