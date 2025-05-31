@@ -2,9 +2,9 @@
 My First Game, and First Project
 
 # General Info
-Language - C++ <br>
-To Compile, Run > g++ main.cpp -lsfml-graphics -lsfml-window -lsfml-system <br>
-Multimedia Library used - Simple and Fast Multimedia Library (SFML)
+- Language - C++ <br>
+- To Compile, Run > g++ main.cpp -lsfml-graphics -lsfml-window -lsfml-system <br>
+- Multimedia Library used - Simple and Fast Multimedia Library (SFML)
 
 # Code Structure
 - Load all sprites <br>
@@ -36,4 +36,4 @@ and only if they are false, the score check is done. They are <br>
 set to false everytime a pipe recycles and set to true everytime the <br>
 bird scores <br>
 - Additional adjustments to restart block to reset score <br>
-- Simple terminal output for now
+- Score output as window name with window.setTitle("Score- "+std::to_string(score)) 

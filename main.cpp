@@ -53,7 +53,7 @@ int main()
     bpipe2.setPosition(2600, gap2 + GAP_SIZE/2);
 
     //Create a Game Window
-    RenderWindow window(VideoMode(1600, 900), "Flappy Bird"); 
+    RenderWindow window(VideoMode(1600, 900), "Flappy Bird - Score: "); 
 
     // Game Logic inside this while loop
     while (window.isOpen() == true)
@@ -170,7 +170,7 @@ int main()
         static int lastScore = -1;
         if (score != lastScore) 
         {
-        cout << "Score: " << score << endl;
+        window.setTitle("Flappy Bird - Score: " + std::to_string(score));
         lastScore = score;
         }
     }
