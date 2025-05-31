@@ -1,6 +1,7 @@
 #include<SFML/Graphics.hpp>
 #include<SFML/Window.hpp>
 #include<iostream>
+#include<random>
 using namespace sf; 
 using std::cout;
 using std::cin;
@@ -10,6 +11,12 @@ int main()
     Texture birdTexture, backgroundTexture, pipeTexture;
     float birdVelocity = 0.25; 
     bool gameover = false;
+
+    // Random number generator for pipe gaps
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> gapDist(300, 600); // Gap center between 300-600 pixels from top
+    const float GAP_SIZE = 200; // Space between top and bottom pipes
 
     // Load Bird
     birdTexture.loadFromFile("assets/bird.png"); 
@@ -22,23 +29,26 @@ int main()
     Sprite background;
     background.setTexture(backgroundTexture); 
 
+    // Generate random gap positions for two pipes
+    float gap1 = gapDist(gen);
+    float gap2 = gapDist(gen);
+
     // Load pipes
     pipeTexture.loadFromFile("assets/pipeb.png");
     Sprite tpipe1, tpipe2, bpipe1, bpipe2;
-    //toppipe1
     tpipe1.setTexture(pipeTexture);
     tpipe1.setScale(1,-1);
-    tpipe1.setPosition(1600, tpipe1.getGlobalBounds().height);
+    tpipe1.setPosition(1600, gap1 - GAP_SIZE/2);
     //toppipe2
     tpipe2.setTexture(pipeTexture);
     tpipe2.setScale(1,-1);
-    tpipe2.setPosition(2600, tpipe2.getGlobalBounds().height);
+    tpipe2.setPosition(2600, gap2 - GAP_SIZE/2);
     //bottompipe1
     bpipe1.setTexture(pipeTexture);
-    bpipe1.setPosition(1600, 900 - bpipe1.getGlobalBounds().height);
+    bpipe1.setPosition(1600, gap1 + GAP_SIZE/2);
     //bottompipe2
     bpipe2.setTexture(pipeTexture);
-    bpipe2.setPosition(2600, 900 - bpipe2.getGlobalBounds().height);
+    bpipe2.setPosition(2600, gap2 + GAP_SIZE/2);
 
     //Create a Game Window
     RenderWindow window(VideoMode(1600, 900), "Flappy Bird"); 
@@ -64,10 +74,12 @@ int main()
                         // Set bird to initial position
                         bird.setPosition(700, 450);
                         // Set pipes to initial position
-                        tpipe1.setPosition(1600, tpipe1.getGlobalBounds().height);
-                        tpipe2.setPosition(2600, tpipe2.getGlobalBounds().height);
-                        bpipe1.setPosition(1600, 900 - bpipe1.getGlobalBounds().height);
-                        bpipe2.setPosition(2600, 900 - bpipe2.getGlobalBounds().height);
+                        gap1 = gapDist(gen);
+                        gap2 = gapDist(gen);
+                        tpipe1.setPosition(1600, gap1 - GAP_SIZE/2);
+                        tpipe2.setPosition(2600, gap2 - GAP_SIZE/2);
+                        bpipe1.setPosition(1600, gap1 + GAP_SIZE/2);
+                        bpipe2.setPosition(2600, gap2 + GAP_SIZE/2);
                         // Change flag so it enters motion block again
                         gameover = false;
                     }    
@@ -97,28 +109,21 @@ int main()
             bpipe2.move(-0.5,0);
             if(tpipe1.getPosition().x <= -tpipe1.getGlobalBounds().width)
             {
-                float rightmostX = std::max(tpipe2.getPosition().x, 1600.0f); // Find rightmost pipe position
-                tpipe1.setPosition(rightmostX + 600, tpipe1.getPosition().y);
+                float rightmostX = std::max(tpipe2.getPosition().x, 1600.0f);
+                float newGap = gapDist(gen);
+                tpipe1.setPosition(rightmostX + 600, newGap - GAP_SIZE/2);
+                bpipe1.setPosition(rightmostX + 600, newGap + GAP_SIZE/2);
             }
             if(tpipe2.getPosition().x <= -tpipe2.getGlobalBounds().width)
             {
                 float rightmostX = std::max(tpipe1.getPosition().x, 1600.0f);
-                tpipe2.setPosition(rightmostX + 600, tpipe2.getPosition().y);
-            }
-            // Same logic for bottom pipes
-            if(bpipe1.getPosition().x <= -bpipe1.getGlobalBounds().width)
-            {
-                float rightmostX = std::max(bpipe2.getPosition().x, 1600.0f);
-                bpipe1.setPosition(rightmostX + 600, bpipe1.getPosition().y);
-            }   
-            if(bpipe2.getPosition().x <= -bpipe2.getGlobalBounds().width)
-            {
-                float rightmostX = std::max(bpipe1.getPosition().x, 1600.0f);
-                bpipe2.setPosition(rightmostX + 600, bpipe2.getPosition().y);
+                float newGap = gapDist(gen);
+                tpipe2.setPosition(rightmostX + 600, newGap - GAP_SIZE/2);
+                bpipe2.setPosition(rightmostX + 600, newGap + GAP_SIZE/2);
             }
 
-            // If bird falls down, further movement stops
-            if (bird.getPosition().y > 900) 
+            // If bird falls down or goes way up, further movement stops
+            if (bird.getPosition().y > 900 || bird.getPosition().y < 0) 
                 gameover = true;
 
             // Collision detection
