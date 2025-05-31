@@ -1,5 +1,6 @@
 # flappy-bird
 fuck it, flappy bird.
+No Score System, No Random Pipe Heights.
 
 This repository will contain the source code in C++. <br>
 Wherever it is compiled, the binary will work on that system. 
