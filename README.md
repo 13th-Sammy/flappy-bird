@@ -33,3 +33,5 @@ bird position using bird.setposition(bird.getposition().x, bird.getposition().y 
 Inside pollevent loop, if space is pressed, bird position goes up by 150 pixels. 
 
 Added background by just creating a sprite and window.draw(background).
+
+Added 2 pipes, 4 sprites of top and bottom and properly set their positions for drawing().
